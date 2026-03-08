@@ -107,7 +107,6 @@ class GameState(State):
             mx, my = pygame.mouse.get_pos()
             grid_height = self.rows * self.cell_height
 
-            # Click in bottom control bar
             if my > grid_height:
                 self.isPlaying = not self.isPlaying
                 return
