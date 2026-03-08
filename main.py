@@ -18,26 +18,28 @@ if __name__ == "__main__":
     pygame.display.set_caption("Game of Life")
 
     gameState = 0
-    startScreen = StartState()
+    startScreen = StartState(screen)
     curScreen = startScreen
 
     while True:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                curScreen.isFinished = True
+        for event in pygame.event.get():
             curScreen.userInput(event)
+
+        curScreen.update()
+        curScreen.draw()
+        pygame.display.update()
+        clock.tick(60)
 
         if curScreen.isFinished:
             if curScreen.nextState == "GameState":
-                curScreen.isFinished = False
-                curScreen.nextState = ""
-                curScreen = StartState
+                # Resize window based on selection
+                if hasattr(curScreen, "selected_size"):
+                    screen = pygame.display.set_mode(curScreen.selected_size)
+
+                # Go to game state
+                curScreen = GameState(screen)
+
             elif curScreen.nextState == "StartState":
-                curScreen.isFinished = False
-                curScreen = startScreen
+                curScreen = StartState(screen)
             else:
                 quit()
-
-        curScreen.update()
-        pygame.display.update()
