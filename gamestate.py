@@ -111,7 +111,6 @@ class GameState(State):
                 self.isPlaying = not self.isPlaying
                 return
 
-            # Click inside grid
             row = my // self.cell_height
             col = mx // self.cell_width
 
