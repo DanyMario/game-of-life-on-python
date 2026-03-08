@@ -40,6 +40,7 @@ if __name__ == "__main__":
                 curScreen = GameState(screen)
 
             elif curScreen.nextState == "StartState":
+                screen = pygame.display.set_mode((screen_width, screen_height))
                 curScreen = StartState(screen)
             else:
                 quit()

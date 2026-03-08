@@ -2,21 +2,29 @@ from life import *
 import time
 
 class GridState:
-    def __init__(self,gridsize:tuple,grid_alive:set):
+    def __init__(self,gridsize:tuple):
         self.grid=[]
-        self.grid_alive=grid_alive
+        self.grid_alive=set()
         self.gen=0
         self.grid_info = {}
         self.to_be={}
         for x in range(gridsize[0]):
             grid_inside=[]
             for y in range(gridsize[1]):
-                if (x,y) in grid_alive:
-                    grid_inside.append(Life((x,y),True))
-                else:
-                    grid_inside.append(Life((x,y),False))
+                grid_inside.append(Life((x,y),False))
             self.grid.append(grid_inside)
 
+    def set_alive(self,coord:tuple,was_alr=False):
+        self.grid_alive.add(coord)
+        self.grid[coord[0]][coord[1]].set_alive()
+        if was_alr:
+            print(f"Cell in {coord} has become alive!")
+
+    def set_dead(self,coord:tuple,was_alr=False):
+        self.grid_alive.discard(coord)
+        self.grid[coord[0]][coord[1]].death()
+        if was_alr:
+            print(f"Cell in {coord} has died!")
 
     def update_grid(self):
         self.grid_info.clear()
@@ -36,20 +44,21 @@ class GridState:
             else:
                 self.to_be[(i[0], i[1])] = True
         for coor,neigh in self.grid_info.items():
-            if neigh >=3:
+            if neigh ==3:
                 self.to_be[coor] = True
             else:
                 self.to_be[coor] = False
 
     def next_gen(self):
         for coor,alive in self.to_be.items():
-            if alive:
-                self.grid_alive.add(coor)
-                self.grid[coor[0]][coor[1]].set_alive()
-            if not alive:
-                self.grid_alive.discard(coor)
-                self.grid[coor[0]][coor[1]].death()
-
+            if alive and coor in self.grid_alive:
+                self.set_alive(coor,True)
+            elif alive and not coor in self.grid_alive:
+                self.set_alive(coor)
+            if not alive and not coor in self.grid_alive:
+                self.set_dead(coor)
+            elif not alive and coor in self.grid_alive:
+                self.set_dead(coor,True)
         self.gen+=1
 
 
