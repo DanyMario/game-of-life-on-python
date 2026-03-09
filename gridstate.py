@@ -61,6 +61,14 @@ class GridState:
                 self.set_dead(coor,True)
         self.gen+=1
 
+    def reset(self):
+        x=self.grid_alive.copy
+        self.grid_alive.clear()
+        self.grid_info.clear()
+        self.to_be.clear()
+        self.gen = 0
+        return x
+
 
     def __repr__(self):
         line = ""
